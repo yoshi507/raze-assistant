@@ -4,7 +4,7 @@ A powerful Discord bot built with **Node.js** + **discord.js v14** featuring:
 
 - 📬 **Modmail** – Users DM the bot to open private support tickets
 - 🛡️ **Moderation** – Ban, kick, timeout, warn, purge & more
-- 🤖 **AI** – Chat with AI using `/ask` (OpenAI / xAI Grok compatible)
+- 🤖 **AI** – Chat with AI using `/ask` (powered by **Groq** + `openai/gpt-oss-20b`)
 
 ---
 
@@ -14,7 +14,6 @@ A powerful Discord bot built with **Node.js** + **discord.js v14** featuring:
 - Users DM the bot → creates a private ticket channel
 - Staff reply in the ticket channel → message is relayed to the user
 - Close tickets with `/close`
-- Transcripts & logging support
 
 ### Moderation
 | Command | Description |
@@ -25,31 +24,31 @@ A powerful Discord bot built with **Node.js** + **discord.js v14** featuring:
 | `/warn` | Warn a member |
 | `/warnings` | View a user's warnings |
 | `/purge` | Bulk delete messages |
-| `/modmail` | Setup / info about modmail |
+| `/close` | Close a modmail ticket |
 
-### AI
-- `/ask <question>` – Ask the AI anything (uses your configured model)
+### AI (Groq)
+- `/ask <question>` – Ask the AI anything
+- Default model: **`openai/gpt-oss-20b`** (fast & free-tier friendly on Groq)
+- Fully compatible with OpenAI, xAI, or any OpenAI-compatible endpoint
 
 ---
 
 ## 🚀 Setup
 
 ### 1. Prerequisites
-- Node.js 18+ 
-- A Discord Bot (create one at [Discord Developer Portal](https://discord.com/developers/applications))
+- Node.js 18+
+- A Discord Bot ([Discord Developer Portal](https://discord.com/developers/applications))
+- A free Groq API key → [console.groq.com/keys](https://console.groq.com/keys)
 
 ### 2. Enable Intents
 In the Discord Developer Portal → your bot → **Privileged Gateway Intents**:
 - ✅ Message Content Intent
 - ✅ Server Members Intent
-- ✅ Presence Intent (optional)
 
 ### 3. Invite the Bot
-Use this invite link (replace `CLIENT_ID`):
 ```
 https://discord.com/api/oauth2/authorize?client_id=CLIENT_ID&permissions=8&scope=bot%20applications.commands
 ```
-(Or generate one with Administrator + applications.commands)
 
 ### 4. Install & Configure
 ```bash
@@ -59,24 +58,38 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` with your values:
-- `DISCORD_TOKEN`
-- `GUILD_ID`
-- `MODMAIL_CATEGORY_ID` (create a category called "Modmail" and copy its ID)
-- `STAFF_ROLE_ID`
-- `AI_API_KEY` (OpenAI or xAI key)
-- Optional: change `AI_BASE_URL` and `AI_MODEL` for xAI Grok:
-  ```
-  AI_BASE_URL=https://api.x.ai/v1
-  AI_MODEL=grok-beta
-  ```
+Edit `.env`:
+
+```env
+DISCORD_TOKEN=your_bot_token
+GUILD_ID=your_server_id
+MODMAIL_CATEGORY_ID=your_modmail_category_id
+STAFF_ROLE_ID=your_staff_role_id
+
+# Groq (recommended)
+AI_API_KEY=your_groq_api_key
+AI_BASE_URL=https://api.groq.com/openai/v1
+AI_MODEL=openai/gpt-oss-20b
+```
 
 ### 5. Run
 ```bash
 npm start
-# or for development with auto-reload:
+# or with auto-reload:
 npm run dev
 ```
+
+---
+
+## 🤖 Switching AI Providers
+
+Just change these 3 lines in `.env`:
+
+| Provider | AI_BASE_URL | AI_MODEL |
+|----------|-------------|----------|
+| **Groq** (default) | `https://api.groq.com/openai/v1` | `openai/gpt-oss-20b` |
+| OpenAI | `https://api.openai.com/v1` | `gpt-4o-mini` |
+| xAI Grok | `https://api.x.ai/v1` | `grok-beta` |
 
 ---
 
@@ -85,10 +98,10 @@ npm run dev
 ```
 raze-assistant/
 ├── src/
-│   ├── index.js          # Main entry point
-│   ├── commands/         # Slash commands
-│   ├── events/           # Discord events
-│   └── utils/            # Helpers
+│   ├── index.js
+│   ├── commands/     # Slash commands
+│   ├── events/       # Discord events
+│   └── utils/
 ├── .env.example
 ├── package.json
 └── README.md
@@ -96,29 +109,12 @@ raze-assistant/
 
 ---
 
-## 🔧 Commands Overview
-
-### Slash Commands (recommended)
-All commands are registered as slash commands automatically on startup.
-
-### Modmail Flow
-1. User DMs the bot any message
-2. Bot creates a channel under the modmail category named `ticket-username`
-3. Staff reply normally in that channel
-4. Bot relays the reply to the user via DM
-5. Use `/close` inside the ticket to close it
-
----
-
 ## 🛡️ Permissions Needed
-The bot needs:
 - Manage Channels
 - Manage Messages
-- Ban Members
-- Kick Members
-- Moderate Members (for timeout)
-- Send Messages / Embed Links
-- View Channels
+- Ban Members / Kick Members
+- Moderate Members (timeout)
+- Send Messages + Embed Links
 
 ---
 
