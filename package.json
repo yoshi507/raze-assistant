@@ -1,0 +1,18 @@
+{
+  "name": "raze-assistant",
+  "version": "1.0.0",
+  "description": "Discord bot with modmail, moderation tools, and AI features",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": ["discord", "bot", "modmail", "moderation", "ai"],
+  "author": "yoshi507",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "openai": "^4.73.0"
+  }
+}
